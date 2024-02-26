@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RestApiTesting.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var _config = builder.Configuration;
 // Configure sqlite database with connection string
 builder.Services.AddDbContext<RestApiTestingContext>(options =>
 {
@@ -15,6 +18,23 @@ builder.Services.AddScoped<IEmployeeService, EmployeeRepository>();
 builder.Services.AddScoped<IDepartmentService, DepartmentRepository>();
 builder.Services.AddScoped<IJobHistoryService, JobHistoryRepository>();
 builder.Services.AddScoped<IPositionService, PositionRepository>();
+
+// Register jwt authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = _config["Jwt:Issuer"],
+            ValidAudience = _config["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]))
+        };
+    });
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -34,7 +54,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
