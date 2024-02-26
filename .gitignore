@@ -1,0 +1,10 @@
+.vs
+RestApi.Test/bin
+RestApi.Test/obj
+RestApi.Test/Properties
+RestApi.Test.xUnit/bin
+RestApi.Test.xUnit/obj
+RestApi.Test.xUnit/Properties
+RestApiTesting/obj
+RestApiTesting/Properties
+RestApiTesting/bin
