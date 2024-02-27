@@ -19,10 +19,6 @@ namespace RestApiTesting.Feartures.Employees.Queries
             public async Task<Employee> Handle(GetEmployeeByIdQuery request, CancellationToken cancellationToken)
             {
                 var employee = await _employeeService.GetEmployeeById(request.Id);
-                if (employee == null)
-                {
-                    throw new NotFoundException(nameof(Employee));
-                }
                 return employee;
             }
         }

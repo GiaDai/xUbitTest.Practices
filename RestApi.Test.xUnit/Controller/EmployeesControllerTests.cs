@@ -129,7 +129,7 @@ namespace RestApi.Test.xUnit.Controller
                 Age = 25,
                 JobHistories = null
             };
-            _mediator.Setup(x => x.Send(It.IsAny<GetEmployeeByIdQuery>(), default)).ReturnsAsync(employee);
+            _mediator.Setup(x => x.Send(It.IsAny<GetEmployeeByIdQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(employee);
             _employeeService.Setup(x => x.GetEmployeeById(It.IsAny<Guid>())).ReturnsAsync(employee);
 
             // Act
@@ -141,5 +141,24 @@ namespace RestApi.Test.xUnit.Controller
             Assert.Equal(employee.Name, returnEmployee.Name);
             Assert.Equal(employee.AccountNumber, returnEmployee.AccountNumber);
         }
+
+        // write test for GetEmployeeById Action Method returns 404 NotFound
+        [Fact]
+        public async Task GetEmployeeById_Returns404NotFound()
+        {
+            // Arrange
+            var idGuid = new Guid("e035daec-a259-4037-b66a-7d3ceab5637a");
+            _mediator.Setup(x => x.Send(It.IsAny<GetEmployeeByIdQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync((Employee?)null);
+            _employeeService.Setup(x => x.GetEmployeeById(It.IsAny<Guid>())).ReturnsAsync((Employee?)null);
+
+            // Act
+            var result = await _employeesController.GetEmployeeById(idGuid);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundResult>(result);
+            Assert.Equal(404, notFoundResult.StatusCode);
+        }
+
+        
     }
 }

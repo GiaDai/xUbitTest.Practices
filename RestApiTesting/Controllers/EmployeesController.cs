@@ -47,6 +47,9 @@ namespace RestApiTesting.Controllers
         public async Task<IActionResult> GetEmployeeById(Guid id)
         {
             var employee = await _mediator.Send(new GetEmployeeByIdQuery { Id = id });
+            if (employee == null)
+                return NotFound();
+            
             return Ok(employee);
         }
     }
