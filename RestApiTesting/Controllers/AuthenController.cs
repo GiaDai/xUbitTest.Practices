@@ -28,15 +28,20 @@ namespace RestApiTesting.Controllers
             if (request.Email == "admin@gmail.com" && request.Password == "P@ssw0rd")
             {
                 var tokenString = GenerateJwtToken(request);
-                return Ok(new { token = tokenString });
+                return Ok(new TokenJwt() { token = tokenString });
             }
             return BadRequest(new { message = "Email or password is incorrect" });
         }
 
         private string GenerateJwtToken(LoginRequest userInfo)
         {
-            Console.WriteLine(_configuration["Jwt:Key"]);
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var keyJwt = _configuration["Jwt:Key"];
+            var issuer = "toanla.com.vn";
+            if(keyJwt is null)
+            {
+                keyJwt = "8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb";
+            }
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyJwt));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -47,13 +52,18 @@ namespace RestApiTesting.Controllers
             };
 
             var token = new JwtSecurityToken(
-                            _configuration["Jwt:Issuer"],
-                            _configuration["Jwt:Issuer"],
+                            _configuration["Jwt:Issuer"] ?? issuer,
+                            _configuration["Jwt:Issuer"] ?? issuer,
                             claims,
                             null,
                             expires: DateTime.Now.AddMinutes(120),
                             signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+    }
+
+    public class TokenJwt
+    {
+        public string token { get; set; }
     }
 }
