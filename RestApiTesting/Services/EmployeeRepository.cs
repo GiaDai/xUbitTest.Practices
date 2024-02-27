@@ -12,6 +12,10 @@ namespace RestApiTesting.Services
             _context = context;
         }
 
+        public async Task<Employee> GetEmployeeById(Guid id)
+        {
+            return await _context.Employees.FindAsync(id);
+        }
         public void CreateEmployee(Employee employee)
         {
             if(employee is not null && _context is not null){
@@ -61,6 +65,9 @@ namespace RestApiTesting.Services
 
     public interface IEmployeeService
     {
+        // Get employee by id method
+        Task<Employee> GetEmployeeById(Guid id);
+
         // Create a new employee method
         void CreateEmployee(Employee employee);
 

@@ -1,4 +1,6 @@
 .vs
+RestApi.Core/bin
+RestApi.Core/obj
 RestApi.Test/bin
 RestApi.Test/obj
 RestApi.Test/Properties

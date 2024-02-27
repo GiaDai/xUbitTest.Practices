@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+﻿using MediatR;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Newtonsoft.Json;
+using RestApi.Core.Response.Authen;
 using RestApiTesting.Controllers;
 
 namespace RestApi.Test.xUnit.Controller
@@ -11,9 +12,10 @@ namespace RestApi.Test.xUnit.Controller
     {
         private readonly AuthenController _authenController;
         private readonly Mock<IConfiguration> _configuration = new Mock<IConfiguration>();
+        private readonly Mock<IMediator> _mediator = new Mock<IMediator>();
         public AuthenControllerTest()
         {
-            _authenController = new AuthenController(_configuration.Object);
+            _authenController = new AuthenController(_configuration.Object,_mediator.Object);
         }
 
         // Write test for Login Action Method has email and password is correct return token string
@@ -27,7 +29,7 @@ namespace RestApi.Test.xUnit.Controller
             var request = _authenController.Login(loginRequest);
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(request);
-            var tokenJwtString = (TokenJwt)okResult.Value;
+            var tokenJwtString = okResult.Value as AuthTokenResponse;
             Assert.NotNull(tokenJwtString);
         }
 

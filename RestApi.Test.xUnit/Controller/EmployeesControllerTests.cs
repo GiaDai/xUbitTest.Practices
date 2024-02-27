@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RestApiTesting.Controllers;
+using RestApiTesting.Feartures.Employees.Queries;
 using RestApiTesting.Models;
 using RestApiTesting.Services;
 
@@ -8,12 +10,13 @@ namespace RestApi.Test.xUnit.Controller
 {
     public class EmployeesControllerTests
     {
+        private readonly Mock<IMediator> _mediator = new Mock<IMediator>();
         private readonly Mock<IEmployeeService> _employeeService;
         private readonly EmployeesController _employeesController;
         public EmployeesControllerTests()
         {
             _employeeService = new Mock<IEmployeeService>();
-            _employeesController = new EmployeesController(_employeeService.Object);
+            _employeesController = new EmployeesController(_mediator.Object,_employeeService.Object);
         }
 
         // Write test for Index Action Method return exact number of employees
@@ -109,6 +112,34 @@ namespace RestApi.Test.xUnit.Controller
             Assert.Equal(employee.Name, emp.Name);
             Assert.Equal(employee.AccountNumber, emp.AccountNumber);
             Assert.Equal(employee.Age, emp.Age);
+        }
+
+        // write test for GetEmployeeById Action Method returns 200 OK
+        [Fact]
+        public async Task GetEmployeeById_Returns200OK()
+        {
+            var idGuid = new Guid("e035daec-a259-4037-b66a-7d3ceab5637a");
+            var departmentGui = new Guid("e035daec-a259-4037-b66a-7d3ceab5637b");
+            // Arrange
+            var employee = new Employee { 
+                Id = idGuid, 
+                Name = "John", 
+                AccountNumber = "255-8547963214-41", 
+                DepartmentId =  departmentGui,
+                Age = 25,
+                JobHistories = null
+            };
+            _mediator.Setup(x => x.Send(It.IsAny<GetEmployeeByIdQuery>(), default)).ReturnsAsync(employee);
+            _employeeService.Setup(x => x.GetEmployeeById(It.IsAny<Guid>())).ReturnsAsync(employee);
+
+            // Act
+            var result = await _employeesController.GetEmployeeById(idGuid);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnEmployee = Assert.IsType<Employee>(okResult.Value);
+            Assert.Equal(employee.Name, returnEmployee.Name);
+            Assert.Equal(employee.AccountNumber, returnEmployee.AccountNumber);
         }
     }
 }

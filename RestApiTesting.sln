@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestApiTesting", "RestApiTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestApi.Test", "RestApi.Test\RestApi.Test.csproj", "{A064714F-6392-4E0B-A972-44C09112B70C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestApi.Test.xUnit", "RestApi.Test.xUnit\RestApi.Test.xUnit.csproj", "{C88132A2-4313-478C-BAB6-0C5B855CEBDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestApi.Test.xUnit", "RestApi.Test.xUnit\RestApi.Test.xUnit.csproj", "{C88132A2-4313-478C-BAB6-0C5B855CEBDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestApi.Core", "RestApi.Core\RestApi.Core.csproj", "{0E116FD0-6183-4867-A157-AF3BE4F6D3FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{C88132A2-4313-478C-BAB6-0C5B855CEBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C88132A2-4313-478C-BAB6-0C5B855CEBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C88132A2-4313-478C-BAB6-0C5B855CEBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E116FD0-6183-4867-A157-AF3BE4F6D3FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E116FD0-6183-4867-A157-AF3BE4F6D3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E116FD0-6183-4867-A157-AF3BE4F6D3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E116FD0-6183-4867-A157-AF3BE4F6D3FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

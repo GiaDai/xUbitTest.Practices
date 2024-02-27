@@ -1,18 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using RestApiTesting.Feartures.Employees.Queries;
 using RestApiTesting.Models;
 using RestApiTesting.Services;
 using RestApiTesting.Validation;
 
 namespace RestApiTesting.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class EmployeesController : ControllerBase
     {
+        private readonly IMediator _mediator;
         private readonly IEmployeeService _employeeRepository;
         private readonly AccountNumberValidation _accountNumberValidation;
-        public EmployeesController(IEmployeeService employeeRepository)
+        public EmployeesController(
+            IMediator mediator,
+            IEmployeeService employeeRepository)
         {
+            _mediator = mediator;
             _accountNumberValidation = new AccountNumberValidation();
             _employeeRepository = employeeRepository;
         }
@@ -35,6 +41,13 @@ namespace RestApiTesting.Controllers
         {
             var employees = await _employeeRepository.GetAllEmployees();
             return Ok(employees);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEmployeeById(Guid id)
+        {
+            var employee = await _mediator.Send(new GetEmployeeByIdQuery { Id = id });
+            return Ok(employee);
         }
     }
 }
